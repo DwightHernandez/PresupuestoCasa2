@@ -1,21 +1,22 @@
-    <!DOCTYPE html>
-    <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="./main.js" type="module" defer></script>
-        <link rel="stylesheet" href="./style.css">
-        <title>Manejo Registros</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./main.js" type="module" defer></script>
+    <link rel="stylesheet" href="./style.css">
+    <title>Manejo Registros</title>
+</head>
 
-    <body>
+<body>
+    <section>
         <div class="titulo">
             <h1>REGISTRO DE INGRESOS Y EGRESOS</h1>
         </div>
-        
 
-        
+
+
 
         <form>
             <input class="numeros" type="number" required name="valor" placeholder="Ingrese el monto"><br>
@@ -23,7 +24,7 @@
                 <input type="radio" name="caja" value="ingreso" checked="true"><label>Ingreso</label>
                 <input type="radio" name="caja" value="egreso"><label>Egreso</label><br>
             </div>
-            
+
             <input class="boton" type="submit" value="Calcular">
         </form>
 
@@ -38,18 +39,20 @@
             </thead>
             <tbody id="myData"></tbody>
         </table>
-        
-        <div class="Busqueda">
-            <label for="searchId">Buscar por ID:</label>
-            <input class="PlaceHolder" type="number" id="searchId" placeholder="ID">
-            <button id="searchButton">Buscar</button>
-        
-        </div>
+
         <!-- Botón para eliminar -->
         <button id="deleteButton" disabled>Eliminar</button>
 
         <!-- Botón para modificar -->
         <button id="modifyButton" disabled>Modificar</button>
+
+        <div class="Busqueda">
+            <label for="searchId">Buscar por ID:</label>
+            <input class="PlaceHolder" type="number" id="searchId" placeholder="ID">
+            <button id="searchButton">Buscar</button>
+
+        </div>
+
 
         <div class="montos">
             <!-- Sección para mostrar el total -->
@@ -61,7 +64,9 @@
             <!-- Sección para mostrar el total de egresos -->
             <div id="totalEgresos">Total de Egresos: $0.00</div>
         </div>
+    </section>
 
-    </body>
 
-    </html>
+</body>
+
+</html>
