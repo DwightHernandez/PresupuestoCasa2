@@ -1,5 +1,4 @@
 const apiUrl = 'https://6509e208f6553137159c30bf.mockapi.io/Registros';
-
 let myForm = document.querySelector("form");
 let myTable = document.querySelector("#myData");
 let deleteButton = document.getElementById("deleteButton");
@@ -10,105 +9,59 @@ let counter = 1;
 let total = 0;
 let totalIngresos = 0;
 let totalEgresos = 0;
-let storedData = JSON.parse(localStorage.getItem('tableData')) || [];
 
-for (let i = 0; i < storedData.length; i++) {
-    insertRow(storedData[i]);
-    counter++;
+async function fetchDataFromAPI() {
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    } catch (error) {
+        console.error('Error fetching data from API:', error);
+        throw error;
+    }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    updateTotal();
-    updateTotalIngresos();
-    updateTotalEgresos();
+async function sendDataToAPI(method, data, id) {
+    try {
+        let url = `${apiUrl}/${id}`;
 
-    myForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const formData = Object.fromEntries(new FormData(e.target));
-        insertRow(formData);
-        updateTotal();
-        updateTotalIngresos();
-        updateTotalEgresos();
-        saveDataToLocalStorage();
-
-        // Envía los datos a la API al crear un registro
-        sendDataToAPI('POST', formData);
-    });
-
-    myTable.addEventListener('change', () => {
-        updateTotal();
-        updateTotalIngresos();
-        updateTotalEgresos();
-        updateButtons();
-        saveDataToLocalStorage();
-    });
-
-    deleteButton.addEventListener('click', () => {
-        let checkboxes = document.querySelectorAll('.select-row:checked');
-        let dataToDelete = Array.from(checkboxes).map(checkbox => {
-            return checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
-        // Elimina los datos en la API
-        sendDataToAPI('DELETE', dataToDelete);
-
-        checkboxes.forEach(checkbox => {
-            let row = checkbox.closest('tr');
-            myTable.removeChild(row);
-        });
-        counter -= checkboxes.length;
-        updateTotal();
-        updateTotalIngresos();
-        updateTotalEgresos();
-        updateButtons();
-        saveDataToLocalStorage();
-    });
-
-    modifyButton.addEventListener('click', () => {
-        let checkboxes = document.querySelectorAll('.select-row:checked');
-        let dataToModify = Array.from(checkboxes).map(checkbox => {
-            const id = checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
-            const newValue = prompt("Ingrese el nuevo monto para la fila #" + id + ":");
-            return { id, valor: parseFloat(newValue).toFixed(2) };
-        });
-
-        // Modifica los datos en la API
-        sendDataToAPI('PUT', dataToModify);
-
-        checkboxes.forEach(checkbox => {
-            let row = checkbox.closest('tr');
-            let newValue = prompt("Ingrese el nuevo monto para la fila #" + row.cells[1].innerText + ":");
-            if (newValue !== null && !isNaN(newValue) && parseFloat(newValue) >= 0) {
-                row.cells[2].textContent = parseFloat(newValue).toFixed(2);
-            }
-        });
-        updateTotal();
-        updateTotalIngresos();
-        updateTotalEgresos();
-        saveDataToLocalStorage();
-    });
-
-    searchButton.addEventListener('click', () => {
-        const searchId = parseInt(searchIdInput.value);
-        const row = findRowById(searchId);
-        if (row) {
-            const valor = parseFloat(row.querySelector('td:nth-child(3)').textContent);
-            const tipo = row.querySelector('td:nth-child(4)').textContent;
-            alert(`ID: ${searchId}\nMonto (Valor): $${valor.toFixed(2)}\nTipo: ${tipo}`);
-        } else {
-            alert(`No se encontró ninguna fila con el ID ${searchId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-    });
-});
+
+        const updatedData = await response.json();
+
+        const rowToUpdate = findRowById(updatedData.id);
+        if (rowToUpdate) {
+            rowToUpdate.querySelector('td:nth-child(3)').textContent = updatedData.valor;
+            rowToUpdate.querySelector('td:nth-child(4)').textContent = updatedData.caja;
+        }
+
+        return updatedData;
+    } catch (error) {
+        console.error('Error sending data to API:', error);
+        throw error;
+    }
+}
 
 function insertRow(formData) {
     let row = document.createElement("tr");
     row.innerHTML = `
-        <td><input type="checkbox" class="select-row"></td>
-        <td>${counter}</td>
-        <td>${formData.valor}</td>
-        <td>${formData.caja}</td>
-    `;
+      <td><input type="checkbox" class="select-row"></td>
+      <td>${counter}</td>
+      <td>${formData.valor}</td>
+      <td>${formData.caja}</td>
+  `;
     myTable.appendChild(row);
     counter++;
 }
@@ -200,31 +153,122 @@ function findRowById(id) {
     return null;
 }
 
-function sendDataToAPI(method, data) {
-    let url = apiUrl;
-    let requestMethod = method;
-
-    if (method === 'PUT' || method === 'DELETE') {
-        url += `/${data.id}`;
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const apiData = await fetchDataFromAPI();
+        apiData.forEach(data => insertRow(data));
+    } catch (error) {
+        console.error('Error loading data from API:', error);
     }
 
-    fetch(url, {
-        method: requestMethod,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+    updateTotal();
+    updateTotalIngresos();
+    updateTotalEgresos();
+
+    myForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = Object.fromEntries(new FormData(e.target));
+        insertRow(formData);
+        updateTotal();
+        updateTotalIngresos();
+        updateTotalEgresos();
+
+        try {
+            await sendDataToAPI('POST', formData);
+        } catch (error) {
+            console.error('Error sending data to API:', error);
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Data sent to API:', data);
-    })
-    .catch(error => {
-        console.error('Error sending data to API:', error);
     });
-}
+
+    myTable.addEventListener('change', () => {
+        updateTotal();
+        updateTotalIngresos();
+        updateTotalEgresos();
+        updateButtons();
+        saveDataToLocalStorage();
+    });
+
+    async function deleteDataFromAPI(ids) {
+        try {
+            const promises = ids.map(async id => {
+                const response = await fetch(`${apiUrl}/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            });
+            return Promise.all(promises);
+        } catch (error) {
+            console.error('Error deleting data from API:', error);
+            throw error;
+        }
+    }
+
+    deleteButton.addEventListener('click', async () => {
+        let checkboxes = document.querySelectorAll('.select-row:checked');
+        let dataToDelete = Array.from(checkboxes).map(checkbox => {
+            return checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
+        });
+
+        try {
+            await deleteDataFromAPI(dataToDelete);
+        } catch (error) {
+            console.error('Error deleting data from API:', error);
+        }
+
+        checkboxes.forEach(checkbox => {
+            let row = checkbox.closest('tr');
+            myTable.removeChild(row);
+        });
+        counter -= checkboxes.length;
+        updateTotal();
+        updateTotalIngresos();
+        updateTotalEgresos();
+        updateButtons();
+        saveDataToLocalStorage();
+    });
+
+    modifyButton.addEventListener('click', async () => {
+        let checkboxes = document.querySelectorAll('.select-row:checked');
+
+        for (const checkbox of checkboxes) {
+            const id = checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
+            const newValue = prompt("Ingrese el nuevo monto para la fila #" + id + ":");
+
+            if (newValue !== null && !isNaN(newValue) && parseFloat(newValue) >= 0) {
+                const row = checkbox.closest('tr');
+                row.cells[2].textContent = parseFloat(newValue).toFixed(2);
+
+                const dataToModify = {
+                    valor: parseFloat(newValue).toFixed(2),
+                    caja: row.cells[3].textContent // Assuming the caja is in the 4th column
+                };
+
+                try {
+                    await sendDataToAPI('PUT', dataToModify, id);
+                } catch (error) {
+                    console.error('Error modifying data in API:', error);
+                }
+            }
+        }
+
+        updateTotal();
+        updateTotalIngresos();
+        updateTotalEgresos();
+        saveDataToLocalStorage();
+    });
+
+    searchButton.addEventListener('click', () => {
+        const searchId = parseInt(searchIdInput.value);
+        const row = findRowById(searchId);
+        if (row) {
+            const valor = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+            const tipo = row.querySelector('td:nth-child(4)').textContent;
+            alert(`ID: ${searchId}\nMonto (Valor): $${valor.toFixed(2)}\nTipo: ${tipo}`);
+        } else {
+            alert(`No se encontró ninguna fila con el ID ${searchId}`);
+        }
+    });
+});
