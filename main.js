@@ -26,6 +26,9 @@ async function fetchDataFromAPI() {
 async function sendDataToAPI(method, data, id) {
     try {
         let url = `${apiUrl}/${id}`;
+        if (method === 'POST') {
+            url = apiUrl;  // For POST requests, use the main API URL
+        }
 
         const response = await fetch(url, {
             method: method,
@@ -39,15 +42,19 @@ async function sendDataToAPI(method, data, id) {
             throw new Error('Network response was not ok');
         }
 
-        const updatedData = await response.json();
-
-        const rowToUpdate = findRowById(updatedData.id);
-        if (rowToUpdate) {
-            rowToUpdate.querySelector('td:nth-child(3)').textContent = updatedData.valor;
-            rowToUpdate.querySelector('td:nth-child(4)').textContent = updatedData.caja;
+        if (method === 'POST') {
+            const createdData = await response.json();
+            insertRow(createdData);  // Insert the new data in the table
+        } else if (method === 'PUT') {
+            const updatedData = await response.json();
+            const rowToUpdate = findRowById(updatedData.id);
+            if (rowToUpdate) {
+                rowToUpdate.querySelector('td:nth-child(3)').textContent = updatedData.valor;
+                rowToUpdate.querySelector('td:nth-child(4)').textContent = updatedData.caja;
+            }
         }
 
-        return updatedData;
+        return true;
     } catch (error) {
         console.error('Error sending data to API:', error);
         throw error;
@@ -57,11 +64,11 @@ async function sendDataToAPI(method, data, id) {
 function insertRow(formData) {
     let row = document.createElement("tr");
     row.innerHTML = `
-      <td><input type="checkbox" class="select-row"></td>
-      <td>${counter}</td>
-      <td>${formData.valor}</td>
-      <td>${formData.caja}</td>
-  `;
+    <td><input type="checkbox" class="select-row"></td>
+    <td>${counter}</td>
+    <td>${formData.valor}</td>
+    <td>${formData.caja}</td>
+`;
     myTable.appendChild(row);
     counter++;
 }
@@ -234,20 +241,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         let checkboxes = document.querySelectorAll('.select-row:checked');
 
         for (const checkbox of checkboxes) {
-            const id = checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
-            const newValue = prompt("Ingrese el nuevo monto para la fila #" + id + ":");
+            const row = checkbox.closest('tr');
+            const id = parseInt(row.querySelector('td:nth-child(2)').textContent);
+            const newValue = prompt(`Ingrese el nuevo monto para la fila #${id}:`);
 
             if (newValue !== null && !isNaN(newValue) && parseFloat(newValue) >= 0) {
-                const row = checkbox.closest('tr');
-                row.cells[2].textContent = parseFloat(newValue).toFixed(2);
-
                 const dataToModify = {
                     valor: parseFloat(newValue).toFixed(2),
-                    caja: row.cells[3].textContent // Assuming the caja is in the 4th column
+                    caja: row.querySelector('td:nth-child(4)').textContent
                 };
 
                 try {
                     await sendDataToAPI('PUT', dataToModify, id);
+                    row.querySelector('td:nth-child(3)').textContent = dataToModify.valor;
                 } catch (error) {
                     console.error('Error modifying data in API:', error);
                 }
