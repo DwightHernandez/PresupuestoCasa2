@@ -272,7 +272,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (row) {
             const valor = parseFloat(row.querySelector('td:nth-child(3)').textContent);
             const tipo = row.querySelector('td:nth-child(4)').textContent;
-            
             alert(`ID: ${searchId}\nMonto (Valor): $${valor.toFixed(2)}\nTipo: ${tipo}`);
         } else {
             alert(`No se encontró ninguna fila con el ID ${searchId}`);

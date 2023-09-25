@@ -7,7 +7,7 @@
    - `<meta charset="UTF-8">`: Establece la codificación de caracteres a UTF-8 para una correcta representación de texto.
    - `<meta name="viewport" content="width=device-width, initial-scale=1.0">`: Define la configuración de la ventana gráfica para un diseño web receptivo.
    - `<script src="./main.js" type="module" defer></script>`: Carga un archivo JavaScript `main.js` utilizando módulos ES6 y pospone su ejecución hasta que se haya analizado todo el documento HTML.
-   - `<link rel="stylesheet" href="./style.css">`: Enlaza una hoja de estilo externa `style.css`.
+   - `<link rel="stylesheet" href="./style.css">`: Enlaza una hoja de estilo externa `style.css` .
    - `<title>Manejo Registros</title>`: Establece el título de la página HTML.
 
 3. **Sección Body (Cuerpo)**:
