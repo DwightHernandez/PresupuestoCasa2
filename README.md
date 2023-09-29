@@ -1,45 +1,61 @@
-### HTML:
-1. **Estructura del Documento**:
-   - `<!DOCTYPE html>`: Define el tipo de documento HTML y su versión.
-   - `<html lang="en">`: El elemento raíz que contiene todo el documento HTML.
 
-2. **Sección Head (Cabecera)**:
-   - `<meta charset="UTF-8">`: Establece la codificación de caracteres a UTF-8 para una correcta representación de texto.
-   - `<meta name="viewport" content="width=device-width, initial-scale=1.0">`: Define la configuración de la ventana gráfica para un diseño web receptivo.
-   - `<script src="./main.js" type="module" defer></script>`: Carga un archivo JavaScript `main.js` utilizando módulos ES6 y pospone su ejecución hasta que se haya analizado todo el documento HTML.
-   - `<link rel="stylesheet" href="./style.css">`: Enlaza una hoja de estilo externa `style.css` .
-   - `<title>Manejo Registros</title>`: Establece el título de la página HTML.
+---
 
-3. **Sección Body (Cuerpo)**:
-   - Contiene el contenido principal de la página web.
+# Registro de Ingresos y Egresos
 
-### JavaScript:
-1. **URL de la API y Variables**:
-   - `const apiUrl = 'https://6509e208f6553137159c30bf.mockapi.io/Registros';`: Define la dirección de la API.
+Este proyecto consiste en una aplicación web que permite llevar un registro de ingresos y egresos. La aplicación utiliza HTML para la estructura de la página y JavaScript para la interactividad y la comunicación con una API de registros.
 
-2. **Selección del DOM**:
-   - Selecciona varios elementos del DOM usando `document.querySelector` y `document.getElementById`.
+## Contenido
 
-3. **Inicialización**:
-   - Inicializa variables como `counter` (contador), `total` (total), `totalIngresos` (total de ingresos), `totalEgresos` (total de egresos) y `storedData` (datos almacenados).
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Uso](#uso)
+- [Funcionalidades](#funcionalidades)
+- [API de Registros](#api-de-registros)
 
-4. **Recuperación del Almacenamiento Local**:
-   - Recupera datos del almacenamiento local y los convierte en `storedData`.
+## Estructura del Proyecto
 
-5. **Event Listeners (Escuchadores de Eventos)**:
-   - Establece escuchadores de eventos para varios elementos:
-     - `DOMContentLoaded`: Escucha la carga completa del contenido del DOM y ejecuta la función asociada.
-     - Evento `submit` en el formulario: Captura la presentación del formulario y ejecuta una función para procesar los datos.
-     - Evento `change` en la tabla: Escucha cambios en la tabla y actualiza los totales en consecuencia.
-     - Eventos `click` en los botones de eliminar, modificar y buscar: Dispara funciones para realizar acciones respectivas.
+El proyecto consta de dos archivos principales:
 
-6. **Funciones**:
-   - Varias funciones para:
-     - Insertar una fila en la tabla basada en los datos del formulario.
-     - Actualizar el total, total de ingresos y total de egresos.
-     - Guardar datos en el almacenamiento local.
-     - Habilitar o deshabilitar botones según las casillas de verificación seleccionadas.
-     - Encontrar una fila por su ID.
-     - Enviar datos a la API utilizando diferentes métodos HTTP (POST, PUT, DELETE).
+- **HTML (index.html):** Contiene la estructura de la página web y los elementos de interfaz de usuario.
+  
+- **JavaScript (main.js):** Implementa la lógica de la aplicación, la interacción con la API de registros y las funcionalidades de manipulación de datos.
 
-Estas funciones manipulan el DOM, manejan las interacciones del usuario, calculan totales, interactúan con una API y gestionan el almacenamiento de datos. El HTML proporciona la estructura y el diseño, mientras que el JavaScript controla el comportamiento y la funcionalidad de la página.
+## Uso
+
+1. Clona o descarga el repositorio a tu máquina local.
+
+    ```bash
+    git clone https://github.com/KevinnHernandez/Pokedex.git
+    ```
+
+2. Abre el archivo `index.html` en un navegador web.
+   
+3. Completa el formulario ingresando el monto y seleccionando si es un ingreso o un egreso.
+   
+4. Haz clic en "Calcular" para agregar el registro a la tabla.
+   
+5. Puedes eliminar o modificar registros seleccionándolos y utilizando los botones correspondientes.
+
+## Funcionalidades
+
+- **Agregar Registros:** Permite agregar registros de ingresos y egresos.
+
+- **Eliminar Registros:** Permite eliminar registros seleccionados.
+
+- **Modificar Registros:** Permite modificar el monto de los registros seleccionados.
+
+- **Buscar por ID:** Permite buscar un registro por su ID.
+
+## API de Registros
+
+La aplicación interactúa con una API de registros simulada. La URL de la API es [https://6509e208f6553137159c30bf.mockapi.io/Registros](https://6509e208f6553137159c30bf.mockapi.io/Registros).
+
+- **GET:** Obtiene la lista de registros.
+
+- **POST:** Agrega un nuevo registro.
+
+- **PUT:** Modifica un registro existente.
+
+- **DELETE:** Elimina un registro.
+
+---
