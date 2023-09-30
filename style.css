@@ -47,6 +47,15 @@ h1{
     margin-top: 3%;
 }
 
+/*h1 se adapte al tamaño de section*/
+@media screen and (max-width: 800px){
+    h1{
+        width: 100%;
+        margin-left: 0%;
+        font-size: 5vw;
+    }
+}
+
 .numeros{
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.20);
 }
@@ -114,6 +123,28 @@ input{
     outline: none;
 }
 
+/*hacer responsive input*/
+@media screen and (max-width: 800px){
+    input{
+        width: 100%;
+        margin-left: 0%;
+        width: 50px;
+        
+    }
+}
+
+label{
+    font-size: 15px;
+    color: #000;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin-right: 0px;
+}
+
+
 .boton{
     width: 25%;
     padding: 10px 20px;
@@ -126,6 +157,14 @@ input{
     font-size: 15px;
     cursor: pointer;
 
+}
+
+/*hacer responsive .boton*/
+@media screen and (max-width: 800px){
+    .boton{
+        width: 100%;
+        margin-left: 0%;
+    }
 }
 
 .boton:hover{
@@ -163,16 +202,15 @@ table{
     margin-left: 25%;
     margin-top: 2%;
 }
+
+/*centrar y ajustar table a medida de section*/
 @media screen and (max-width: 800px){
     table{
         width: 100%;
         margin-left: 0%;
     }
-    form{
-        width: 100%;
-        margin-left: 0%;
-    }
 }
+
 
 #deleteButton{
     background: #ff0000;
