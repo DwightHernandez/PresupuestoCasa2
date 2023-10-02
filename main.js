@@ -54,6 +54,9 @@ async function sendDataToAPI(method, data, id) {
             }
         }
 
+        // Reload the page after updating the data
+        location.reload();
+
         return true;
     } catch (error) {
         console.error('Error sending data to API:', error);
@@ -64,11 +67,11 @@ async function sendDataToAPI(method, data, id) {
 function insertRow(formData) {
     let row = document.createElement("tr");
     row.innerHTML = `
-    <td><input type="checkbox" class="select-row"></td>
-    <td>${counter}</td>
-    <td>${formData.valor}</td>
-    <td>${formData.caja}</td>
-`;
+      <td><input type="checkbox" class="select-row"></td>
+      <td>${counter}</td>
+      <td>${formData.valor}</td>
+      <td>${formData.caja}</td>
+  `;
     myTable.appendChild(row);
     counter++;
 }
@@ -175,6 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     myForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const formData = Object.fromEntries(new FormData(e.target));
+
         insertRow(formData);
         updateTotal();
         updateTotalIngresos();
@@ -241,29 +245,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         let checkboxes = document.querySelectorAll('.select-row:checked');
 
         for (const checkbox of checkboxes) {
-            const row = checkbox.closest('tr');
-            const id = parseInt(row.querySelector('td:nth-child(2)').textContent);
-            const newValue = prompt(`Ingrese el nuevo monto para la fila #${id}:`);
+            const id = checkbox.closest('tr').querySelector('td:nth-child(2)').textContent;
+            const row = findRowById(parseInt(id));
 
-            if (newValue !== null && !isNaN(newValue) && parseFloat(newValue) >= 0) {
+            if (row) {
+                const oldValue = parseFloat(row.querySelector('td:nth-child(3)').textContent);
+                let newValue = parseFloat(prompt(`Ingrese el nuevo monto para la fila #${id}:`, oldValue).trim());
+
+                if (isNaN(newValue) || newValue < 0) {
+                    alert('El monto ingresado es inválido.');
+                    continue;
+                }
+
+                newValue = newValue.toFixed(2);  // Format to 2 decimal places
+
                 const dataToModify = {
-                    valor: parseFloat(newValue).toFixed(2),
+                    valor: newValue,
                     caja: row.querySelector('td:nth-child(4)').textContent
                 };
 
                 try {
                     await sendDataToAPI('PUT', dataToModify, id);
-                    row.querySelector('td:nth-child(3)').textContent = dataToModify.valor;
+                    row.querySelector('td:nth-child(3)').textContent = newValue;
+                    updateTotal();
+                    updateTotalIngresos();
+                    updateTotalEgresos();
                 } catch (error) {
                     console.error('Error modifying data in API:', error);
                 }
             }
         }
-
-        updateTotal();
-        updateTotalIngresos();
-        updateTotalEgresos();
-        saveDataToLocalStorage();
+        
+        // Reload the page after modifying data
+        location.reload();
     });
 
     searchButton.addEventListener('click', () => {
