@@ -1,0 +1,17 @@
+{
+  "name": "presupuestocasa2",
+  "version": "1.0.0",
+  "description": "---",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "json-server --watch db.json --port 5010"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "json-server": "0.17.4"
+  }
+}
+  

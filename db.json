@@ -1,0 +1,14 @@
+{
+  "OperacionesYregistros": [
+    {
+      "valor": "545",
+      "caja": "ingreso",
+      "id": 1
+    },
+    {
+      "valor": "7878.00",
+      "caja": "ingreso",
+      "id": 2
+    }
+  ]
+}
