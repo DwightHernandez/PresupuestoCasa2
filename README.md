@@ -1,61 +1,50 @@
 
 ---
 
-# Registro de Ingresos y Egresos
+# Página de Gestión de Operaciones
 
-Este proyecto consiste en una aplicación web que permite llevar un registro de ingresos y egresos. La aplicación utiliza HTML para la estructura de la página y JavaScript para la interactividad y la comunicación con una API de registros.
-
-## Contenido
-
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Uso](#uso)
-- [Funcionalidades](#funcionalidades)
-- [API de Registros](#api-de-registros)
-
-## Estructura del Proyecto
-
-El proyecto consta de dos archivos principales:
-
-- **HTML (index.html):** Contiene la estructura de la página web y los elementos de interfaz de usuario.
-  
-- **JavaScript (main.js):** Implementa la lógica de la aplicación, la interacción con la API de registros y las funcionalidades de manipulación de datos.
-
-## Uso
-
-1. Clona o descarga el repositorio a tu máquina local.
-
-    ```bash
-    git clone https://github.com/KevinnHernandez/Pokedex.git
-    ```
-
-2. Abre el archivo `index.html` en un navegador web.
-   
-3. Completa el formulario ingresando el monto y seleccionando si es un ingreso o un egreso.
-   
-4. Haz clic en "Calcular" para agregar el registro a la tabla.
-   
-5. Puedes eliminar o modificar registros seleccionándolos y utilizando los botones correspondientes.
+Esta página web permite gestionar operaciones financieras, como ingresos y egresos, almacenando y manipulando los datos utilizando una API basada en json-server.
 
 ## Funcionalidades
 
-- **Agregar Registros:** Permite agregar registros de ingresos y egresos.
+1. **Ingreso de Datos:**
+   - Para ingresar un nuevo dato, completa el formulario en la parte superior de la página y haz clic en "Agregar". El dato será almacenado en la API y se mostrará en la tabla.
 
-- **Eliminar Registros:** Permite eliminar registros seleccionados.
+2. **Modificación de Datos:**
+   - Selecciona las filas que deseas modificar marcando las casillas de selección.
+   - Haz clic en "Modificar Operación". Para cada operación seleccionada, se te pedirá que ingreses el nuevo monto. Ingresa el monto y haz clic en "Aceptar". Los datos serán actualizados tanto en la tabla como en la API.
 
-- **Modificar Registros:** Permite modificar el monto de los registros seleccionados.
+3. **Eliminación de Datos:**
+   - Selecciona las filas que deseas eliminar marcando las casillas de selección.
+   - Haz clic en "Eliminar Operación". Las operaciones seleccionadas serán eliminadas tanto de la tabla como de la API.
 
-- **Buscar por ID:** Permite buscar un registro por su ID.
+4. **Búsqueda de Datos:**
+   - Ingresa el ID de la operación que deseas buscar en el campo de búsqueda y haz clic en "Buscar Operación". Si se encuentra, se mostrará un cuadro de diálogo con los detalles de la operación.
 
-## API de Registros
+## Uso
 
-La aplicación interactúa con una API de registros simulada. La URL de la API es [https://6509e208f6553137159c30bf.mockapi.io/Registros](https://6509e208f6553137159c30bf.mockapi.io/Registros).
+1. Clona este repositorio en tu máquina local.
 
-- **GET:** Obtiene la lista de registros.
+    ```bash
+    git clone https://github.com/DwightHernandez/PresupuestoCasa2.git
+    ```
 
-- **POST:** Agrega un nuevo registro.
+2. Asegúrate de tener [Node.js](https://nodejs.org) instalado.
 
-- **PUT:** Modifica un registro existente.
+3. Instala las dependencias utilizando el siguiente comando en la terminal:
 
-- **DELETE:** Elimina un registro.
+   ```bash
+   npm install
+   ```
+
+4. Inicia el servidor json-server con el siguiente comando:
+
+   ```bash
+   json-server --watch db.json --port 5010
+   ```
+
+5. Abre el archivo `index.html` en tu navegador para acceder a la página.
+
+6. Utiliza las funcionalidades de la página según lo explicado anteriormente.
 
 ---
