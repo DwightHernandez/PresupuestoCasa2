@@ -1,4 +1,5 @@
-const apiUrl = 'https://6509e208f6553137159c30bf.mockapi.io/Registros';
+const apiUrl = 'http://localhost:5010/OperacionesYregistros';  // Updated API URL
+
 let myForm = document.querySelector("form");
 let myTable = document.querySelector("#myData");
 let deleteButton = document.getElementById("deleteButton");
@@ -12,7 +13,7 @@ let totalEgresos = 0;
 
 async function fetchDataFromAPI() {
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl);  // Use updated API URL
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -45,6 +46,7 @@ async function sendDataToAPI(method, data, id) {
         if (method === 'POST') {
             const createdData = await response.json();
             insertRow(createdData);  // Insert the new data in the table
+            counter++;
         } else if (method === 'PUT') {
             const updatedData = await response.json();
             const rowToUpdate = findRowById(updatedData.id);
@@ -54,8 +56,9 @@ async function sendDataToAPI(method, data, id) {
             }
         }
 
-        // Reload the page after updating the data
-        location.reload();
+        updateTotal();
+        updateTotalIngresos();
+        updateTotalEgresos();
 
         return true;
     } catch (error) {
